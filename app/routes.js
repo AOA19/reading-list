@@ -11,7 +11,7 @@ module.exports = function(app, passport, db) {
 
     // PROFILE SECTION =========================
     app.get('/profile', isLoggedIn, function(req, res) {
-        db.collection('bookList').find().toArray((err, result) => {
+        db.collection('bookList').find({user: req.user}).toArray((err, result) => {
           if (err) return console.log(err)
           res.render('profile.ejs', {
             user : req.user,
@@ -33,6 +33,7 @@ module.exports = function(app, passport, db) {
     app.post('/books', (req, res) => {
       db.collection('bookList').insertOne(
         {
+          user: req.user,
           title: req.body.title,
           author: req.body.author,
           genre: req.body.genre,
